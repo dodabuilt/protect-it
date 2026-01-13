@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
     initScrollEffects();
     initFAQ();
+    initVehicleSelector();
     initContactForm();
     initAnimations();
 });
@@ -108,6 +109,204 @@ function initFAQ() {
 }
 
 // ===================================
+// NHTSA VEHICLE SELECTOR
+// ===================================
+const NHTSA_API_BASE = 'https://vpic.nhtsa.dot.gov/api/vehicles';
+
+function initVehicleSelector() {
+    const yearSelect = document.getElementById('vehicle-year');
+    const makeSelect = document.getElementById('vehicle-make');
+    const modelSelect = document.getElementById('vehicle-model');
+    const submodelSelect = document.getElementById('vehicle-submodel');
+    const loadingIndicator = document.getElementById('vehicle-loading');
+    
+    // Populate years (current year + 1 down to 1990)
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear + 1; year >= 1990; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
+    
+    // Year change handler
+    yearSelect.addEventListener('change', async () => {
+        const year = yearSelect.value;
+        
+        // Reset dependent dropdowns
+        resetSelect(makeSelect, 'Make');
+        resetSelect(modelSelect, 'Model');
+        resetSelect(submodelSelect, 'Trim/Style (optional)');
+        
+        if (!year) return;
+        
+        showLoading(true);
+        try {
+            const makes = await fetchMakes(year);
+            populateSelect(makeSelect, makes, 'Make_Name', 'Make_ID');
+            makeSelect.disabled = false;
+        } catch (error) {
+            console.error('Error fetching makes:', error);
+            showFormMessage('Error loading vehicle makes. Please try again.', 'error');
+        }
+        showLoading(false);
+    });
+    
+    // Make change handler
+    makeSelect.addEventListener('change', async () => {
+        const year = yearSelect.value;
+        const makeId = makeSelect.value;
+        const makeName = makeSelect.options[makeSelect.selectedIndex]?.text;
+        
+        // Reset dependent dropdowns
+        resetSelect(modelSelect, 'Model');
+        resetSelect(submodelSelect, 'Trim/Style (optional)');
+        
+        if (!makeId) return;
+        
+        showLoading(true);
+        try {
+            const models = await fetchModels(year, makeName);
+            populateSelect(modelSelect, models, 'Model_Name', 'Model_ID');
+            modelSelect.disabled = false;
+        } catch (error) {
+            console.error('Error fetching models:', error);
+            showFormMessage('Error loading vehicle models. Please try again.', 'error');
+        }
+        showLoading(false);
+    });
+    
+    // Model change handler
+    modelSelect.addEventListener('change', async () => {
+        const year = yearSelect.value;
+        const modelId = modelSelect.value;
+        const modelName = modelSelect.options[modelSelect.selectedIndex]?.text;
+        const makeName = makeSelect.options[makeSelect.selectedIndex]?.text;
+        
+        // Reset submodel dropdown
+        resetSelect(submodelSelect, 'Trim/Style (optional)');
+        
+        if (!modelId) return;
+        
+        showLoading(true);
+        try {
+            const submodels = await fetchSubmodels(year, makeName, modelName);
+            if (submodels && submodels.length > 0) {
+                populateSubmodelSelect(submodelSelect, submodels);
+                submodelSelect.disabled = false;
+            }
+        } catch (error) {
+            console.error('Error fetching submodels:', error);
+            // Submodel is optional, so we don't show an error
+        }
+        showLoading(false);
+    });
+    
+    function showLoading(show) {
+        if (loadingIndicator) {
+            loadingIndicator.style.display = show ? 'flex' : 'none';
+        }
+    }
+}
+
+// Fetch makes for a given year
+async function fetchMakes(year) {
+    const response = await fetch(
+        `${NHTSA_API_BASE}/GetMakesForVehicleType/car?format=json`
+    );
+    const data = await response.json();
+    
+    // Sort makes alphabetically
+    const makes = data.Results || [];
+    return makes.sort((a, b) => a.MakeName.localeCompare(b.MakeName));
+}
+
+// Fetch models for a given make and year
+async function fetchModels(year, makeName) {
+    const response = await fetch(
+        `${NHTSA_API_BASE}/GetModelsForMakeYear/make/${encodeURIComponent(makeName)}/modelyear/${year}?format=json`
+    );
+    const data = await response.json();
+    
+    // Sort models alphabetically
+    const models = data.Results || [];
+    return models.sort((a, b) => a.Model_Name.localeCompare(b.Model_Name));
+}
+
+// Fetch vehicle details (submodels/trims) for a specific vehicle
+async function fetchSubmodels(year, makeName, modelName) {
+    const response = await fetch(
+        `${NHTSA_API_BASE}/GetModelsForMakeYear/make/${encodeURIComponent(makeName)}/modelyear/${year}/vehicletype/car?format=json`
+    );
+    const data = await response.json();
+    
+    // Filter to get variations of the selected model
+    const results = data.Results || [];
+    const modelVariations = results.filter(r => 
+        r.Model_Name.toLowerCase().includes(modelName.toLowerCase()) ||
+        modelName.toLowerCase().includes(r.Model_Name.toLowerCase())
+    );
+    
+    // If we have variations, return unique ones
+    if (modelVariations.length > 1) {
+        const uniqueNames = [...new Set(modelVariations.map(m => m.Model_Name))];
+        return uniqueNames.map(name => ({ name }));
+    }
+    
+    // Try to get vehicle types/body styles
+    try {
+        const typesResponse = await fetch(
+            `${NHTSA_API_BASE}/GetVehicleTypesForMake/${encodeURIComponent(makeName)}?format=json`
+        );
+        const typesData = await typesResponse.json();
+        const types = typesData.Results || [];
+        
+        if (types.length > 0) {
+            return types.map(t => ({ name: t.VehicleTypeName }));
+        }
+    } catch (e) {
+        // Ignore errors for optional data
+    }
+    
+    return [];
+}
+
+// Reset a select element
+function resetSelect(select, placeholder) {
+    select.innerHTML = `<option value="">${placeholder}</option>`;
+    select.disabled = true;
+}
+
+// Populate a select element with options
+function populateSelect(select, items, labelKey, valueKey) {
+    // Keep the placeholder
+    const placeholder = select.options[0];
+    select.innerHTML = '';
+    select.appendChild(placeholder);
+    
+    items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item[valueKey] || item[labelKey];
+        option.textContent = item[labelKey];
+        select.appendChild(option);
+    });
+}
+
+// Populate submodel select with simpler data structure
+function populateSubmodelSelect(select, items) {
+    const placeholder = select.options[0];
+    select.innerHTML = '';
+    select.appendChild(placeholder);
+    
+    items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.name;
+        option.textContent = item.name;
+        select.appendChild(option);
+    });
+}
+
+// ===================================
 // CONTACT FORM
 // ===================================
 function initContactForm() {
@@ -120,12 +319,28 @@ function initContactForm() {
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
         
+        // Build vehicle string from selects
+        const yearSelect = document.getElementById('vehicle-year');
+        const makeSelect = document.getElementById('vehicle-make');
+        const modelSelect = document.getElementById('vehicle-model');
+        const submodelSelect = document.getElementById('vehicle-submodel');
+        
+        const year = yearSelect.options[yearSelect.selectedIndex]?.text || '';
+        const make = makeSelect.options[makeSelect.selectedIndex]?.text || '';
+        const model = modelSelect.options[modelSelect.selectedIndex]?.text || '';
+        const submodel = submodelSelect.options[submodelSelect.selectedIndex]?.text || '';
+        
+        let vehicleInfo = `${year} ${make} ${model}`.trim();
+        if (submodel && submodel !== 'Trim/Style (optional)') {
+            vehicleInfo += ` (${submodel})`;
+        }
+        
         // Create mailto link with form data
         const subject = encodeURIComponent(`Quote Request from ${data.name}`);
         const body = encodeURIComponent(
             `Name: ${data.name}\n` +
             `Email: ${data.email}\n` +
-            `Vehicle: ${data.vehicle}\n` +
+            `Vehicle: ${vehicleInfo}\n` +
             `Location: ${data.location}\n` +
             `\nMessage:\n${data.message || 'No additional details provided.'}`
         );
@@ -139,6 +354,10 @@ function initContactForm() {
         // Reset form after a delay
         setTimeout(() => {
             form.reset();
+            // Reset vehicle selects
+            resetSelect(document.getElementById('vehicle-make'), 'Make');
+            resetSelect(document.getElementById('vehicle-model'), 'Model');
+            resetSelect(document.getElementById('vehicle-submodel'), 'Trim/Style (optional)');
         }, 1000);
     });
 }

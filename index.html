@@ -442,8 +442,29 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="vehicle">Vehicle Info</label>
-                            <input type="text" id="vehicle" name="vehicle" required placeholder="2022 Toyota Tacoma">
+                            <label>Vehicle Information</label>
+                            <div class="vehicle-selects">
+                                <select id="vehicle-year" name="vehicle-year" required>
+                                    <option value="">Year</option>
+                                </select>
+                                <select id="vehicle-make" name="vehicle-make" required disabled>
+                                    <option value="">Make</option>
+                                </select>
+                            </div>
+                            <div class="vehicle-selects">
+                                <select id="vehicle-model" name="vehicle-model" required disabled>
+                                    <option value="">Model</option>
+                                </select>
+                                <select id="vehicle-submodel" name="vehicle-submodel" disabled>
+                                    <option value="">Trim/Style (optional)</option>
+                                </select>
+                            </div>
+                            <div class="vehicle-loading" id="vehicle-loading" style="display: none;">
+                                <svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/>
+                                </svg>
+                                <span>Loading...</span>
+                            </div>
                         </div>
                         
                         <div class="form-group">

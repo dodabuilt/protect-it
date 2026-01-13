@@ -1004,6 +1004,77 @@ a.contact-item:hover {
     min-height: 80px;
 }
 
+/* Vehicle Selection Dropdowns */
+.vehicle-selects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.vehicle-selects:last-of-type {
+    margin-bottom: 0;
+}
+
+.vehicle-selects select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    background: var(--color-graphite);
+    border: 1px solid var(--color-steel);
+    border-radius: var(--radius-md);
+    color: var(--color-light);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), opacity var(--transition-fast);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a8a8a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.vehicle-selects select:focus {
+    outline: none;
+    border-color: var(--color-rust);
+}
+
+.vehicle-selects select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.vehicle-selects select option {
+    background: var(--color-graphite);
+    color: var(--color-light);
+}
+
+.vehicle-loading {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--color-rust-light);
+    font-size: 0.85rem;
+    margin-top: var(--spacing-xs);
+}
+
+.vehicle-loading .spinner {
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+    .vehicle-selects {
+        grid-template-columns: 1fr;
+    }
+}
+
 .form-note {
     text-align: center;
     color: var(--color-slate);
