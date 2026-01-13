@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.vercel
+dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Playwright screenshots (testing)
+.playwright-mcp/
