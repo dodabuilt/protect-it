@@ -1,0 +1,239 @@
+/* ===================================
+   GALLERY & PRICING CTA SECTION
+   =================================== */
+
+.gallery-section {
+    background: var(--color-black);
+    overflow: hidden;
+}
+
+.gallery-carousel {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+}
+
+.carousel-track-container {
+    flex: 1;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.carousel-slide {
+    flex: 0 0 100%;
+    padding: 0 var(--spacing-xs);
+}
+
+@media (min-width: 768px) {
+    .carousel-slide {
+        flex: 0 0 50%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .carousel-slide {
+        flex: 0 0 33.333%;
+    }
+}
+
+.slide-placeholder {
+    background: var(--gradient-dark);
+    border: 2px dashed var(--color-steel);
+    border-radius: var(--radius-lg);
+    aspect-ratio: 4/3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    color: var(--color-silver);
+    transition: all var(--transition-medium);
+}
+
+.slide-placeholder:hover {
+    border-color: var(--color-rust);
+    color: var(--color-rust-light);
+}
+
+.slide-placeholder svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.6;
+}
+
+.slide-placeholder span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Carousel with actual images */
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    aspect-ratio: 4/3;
+}
+
+.carousel-btn {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-graphite);
+    border: 2px solid var(--color-steel);
+    color: var(--color-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    z-index: 10;
+}
+
+.carousel-btn:hover {
+    background: var(--color-rust);
+    border-color: var(--color-rust);
+    transform: scale(1.1);
+}
+
+.carousel-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xl);
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-steel);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.carousel-dot.active {
+    background: var(--color-rust);
+    transform: scale(1.2);
+}
+
+.carousel-dot:hover {
+    background: var(--color-rust-light);
+}
+
+/* Pricing CTA */
+.pricing-cta {
+    background: linear-gradient(135deg, var(--color-charcoal) 0%, var(--color-graphite) 100%);
+    border: 1px solid var(--color-steel);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-rust);
+}
+
+.pricing-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+    .pricing-content {
+        flex-direction: row;
+        text-align: left;
+    }
+}
+
+.pricing-badge {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-rust);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.9; }
+}
+
+.pricing-badge svg {
+    width: 40px;
+    height: 40px;
+    color: white;
+}
+
+.pricing-text {
+    flex: 1;
+}
+
+.pricing-text h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    color: var(--color-light);
+    margin-bottom: var(--spacing-xs);
+    letter-spacing: 1px;
+}
+
+.pricing-text .price {
+    color: var(--color-rust-light);
+    font-size: 1.2em;
+}
+
+.pricing-text p {
+    color: var(--color-silver);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.pricing-cta .btn-lg {
+    flex-shrink: 0;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    white-space: nowrap;
+}
+
+.pricing-cta .btn-lg svg {
+    width: 20px;
+    height: 20px;
+    transition: transform var(--transition-fast);
+}
+
+.pricing-cta .btn-lg:hover svg {
+    transform: translateX(4px);
+}

@@ -1,0 +1,172 @@
+/* ===================================
+   FORM COMPONENTS
+   Vehicle Selector & Location Autocomplete
+   =================================== */
+
+/* Vehicle Selection Dropdowns */
+.vehicle-selects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.vehicle-selects:last-of-type {
+    margin-bottom: 0;
+}
+
+.vehicle-selects select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    background: var(--color-graphite);
+    border: 1px solid var(--color-steel);
+    border-radius: var(--radius-md);
+    color: var(--color-light);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), opacity var(--transition-fast);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a8a8a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.vehicle-selects select:focus {
+    outline: none;
+    border-color: var(--color-rust);
+}
+
+.vehicle-selects select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.vehicle-selects select option {
+    background: var(--color-graphite);
+    color: var(--color-light);
+}
+
+.vehicle-loading {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--color-rust-light);
+    font-size: 0.85rem;
+    margin-top: var(--spacing-xs);
+}
+
+.vehicle-loading .spinner {
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+    .vehicle-selects {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Location Autocomplete */
+.location-group {
+    position: relative;
+}
+
+.location-input-wrapper {
+    position: relative;
+}
+
+.location-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-charcoal);
+    border: 1px solid var(--color-steel);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+}
+
+.location-suggestions.active {
+    display: block;
+}
+
+.location-suggestion {
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-steel);
+    transition: background var(--transition-fast);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+}
+
+.location-suggestion:last-child {
+    border-bottom: none;
+}
+
+.location-suggestion:hover {
+    background: var(--color-graphite);
+}
+
+.location-suggestion-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--color-rust);
+}
+
+.location-suggestion-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+}
+
+.location-suggestion-text {
+    flex: 1;
+}
+
+.location-suggestion-main {
+    color: var(--color-light);
+    font-size: 0.95rem;
+}
+
+.location-suggestion-sub {
+    color: var(--color-silver);
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+.location-loading {
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--color-silver);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.location-loading .spinner {
+    width: 14px;
+    height: 14px;
+    animation: spin 1s linear infinite;
+}
+
+.location-no-results {
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--color-silver);
+    font-size: 0.9rem;
+}

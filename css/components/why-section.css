@@ -1,0 +1,147 @@
+/* ===================================
+   WHY FLUID FILM SECTION
+   =================================== */
+
+.why-section {
+    background: var(--color-black);
+}
+
+.why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-2xl);
+    align-items: center;
+}
+
+.why-content .section-title {
+    text-align: left;
+}
+
+.why-intro {
+    color: var(--color-silver);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-xl);
+}
+
+.why-list {
+    list-style: none;
+}
+
+.why-list li {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.why-icon {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--color-rust);
+    color: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+}
+
+.why-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.why-list strong {
+    display: block;
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+}
+
+.why-list p {
+    color: var(--color-silver);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.why-visual {
+    display: flex;
+    justify-content: center;
+}
+
+.visual-card {
+    background: var(--gradient-dark);
+    border: 1px solid var(--color-steel);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    max-width: 350px;
+    position: relative;
+    overflow: hidden;
+}
+
+.visual-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-rust);
+}
+
+.visual-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--spacing-md);
+    color: var(--color-rust);
+}
+
+.visual-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.visual-card h4 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 0.02em;
+    margin-bottom: var(--spacing-sm);
+}
+
+.visual-card p {
+    color: var(--color-silver);
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.visual-tag {
+    display: inline-block;
+    background: rgba(196, 92, 38, 0.2);
+    color: var(--color-rust-light);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .why-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+    }
+    
+    .why-content .section-title {
+        text-align: center;
+    }
+    
+    .why-content {
+        text-align: center;
+    }
+    
+    .why-list li {
+        text-align: left;
+    }
+}

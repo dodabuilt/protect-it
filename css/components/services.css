@@ -1,0 +1,97 @@
+/* ===================================
+   SERVICES SECTION
+   =================================== */
+
+.services {
+    background: var(--color-charcoal);
+    position: relative;
+}
+
+.services::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-steel), transparent);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.service-card {
+    position: relative;
+    background: var(--color-graphite);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    border: 1px solid var(--color-steel);
+    transition: all var(--transition-medium);
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-rust);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.service-card.featured {
+    background: linear-gradient(135deg, var(--color-graphite) 0%, rgba(196, 92, 38, 0.1) 100%);
+    border-color: var(--color-rust);
+}
+
+.service-badge {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background: var(--color-rust);
+    color: var(--color-white);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--color-steel);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+    transition: all var(--transition-medium);
+}
+
+.service-card:hover .service-icon {
+    background: var(--color-rust);
+}
+
+.service-icon svg {
+    width: 28px;
+    height: 28px;
+    color: var(--color-light);
+}
+
+.service-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.02em;
+    margin-bottom: var(--spacing-sm);
+}
+
+.service-card p {
+    color: var(--color-silver);
+    font-size: 0.95rem;
+}
+
+/* Animation delays */
+.service-card:nth-child(1) { animation-delay: 0.1s; }
+.service-card:nth-child(2) { animation-delay: 0.2s; }
+.service-card:nth-child(3) { animation-delay: 0.3s; }
