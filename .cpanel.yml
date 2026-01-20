@@ -1,10 +1,9 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/protunit/nodeapps/protect-it/
+    - export DEPLOYPATH=/home/protunit/public_html/
     - /bin/cp index.html $DEPLOYPATH
-    - /bin/cp server.js $DEPLOYPATH
-    - /bin/cp package.json $DEPLOYPATH
+    - /bin/cp contact.php $DEPLOYPATH
     - /bin/cp -R css $DEPLOYPATH
     - /bin/cp -R js $DEPLOYPATH
     - /bin/cp -R images $DEPLOYPATH

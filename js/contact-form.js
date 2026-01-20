@@ -6,7 +6,7 @@ import { resetSelect, showFormMessage } from './vehicle-selector.js';
 
 export function initContactForm() {
     const form = document.getElementById('contact-form');
-    
+
     if (!form) return;
 
     const phoneInput = form.querySelector('#phone');
@@ -31,30 +31,30 @@ export function initContactForm() {
             phoneInput.value = formatPhone(phoneInput.value);
         });
     }
-    
+
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        
+
         // Get form data
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
-        
+
         // Build vehicle string from selects
         const yearSelect = document.getElementById('vehicle-year');
         const makeSelect = document.getElementById('vehicle-make');
         const modelSelect = document.getElementById('vehicle-model');
         const submodelSelect = document.getElementById('vehicle-submodel');
-        
+
         const year = yearSelect.options[yearSelect.selectedIndex]?.text || '';
         const make = makeSelect.options[makeSelect.selectedIndex]?.text || '';
         const model = modelSelect.options[modelSelect.selectedIndex]?.text || '';
         const submodel = submodelSelect.options[submodelSelect.selectedIndex]?.text || '';
-        
+
         let vehicleInfo = `${year} ${make} ${model}`.trim();
         if (submodel && submodel !== 'Trim/Style (optional)') {
             vehicleInfo += ` (${submodel})`;
         }
-        
+
         const payload = {
             name: data.name,
             email: data.email,
@@ -64,7 +64,7 @@ export function initContactForm() {
             message: data.message
         };
 
-        fetch('/api/contact', {
+        fetch('/contact.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
