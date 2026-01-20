@@ -23,6 +23,18 @@
     font-size: 1.1rem;
 }
 
+.contact-info>p a {
+    color: var(--color-rust-light);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(196, 92, 38, 0.4);
+}
+
+.contact-info>p a:hover {
+    color: var(--color-rust);
+    border-bottom-color: rgba(196, 92, 38, 0.8);
+}
+
 .contact-details {
     display: flex;
     flex-direction: column;
