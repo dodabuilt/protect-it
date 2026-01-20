@@ -79,12 +79,59 @@
     animation: fadeInUp 1s ease-out 0.3s backwards;
 }
 
+.flash-once {
+    position: relative;
+    display: inline-block;
+    line-height: inherit;
+}
+
+.flash-once::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    color: transparent;
+    background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+    background-size: 200% 100%;
+    background-position: -150% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    visibility: hidden;
+    animation: flashSweepText 1.2s ease-out 0.6s 1 forwards;
+    pointer-events: none;
+}
+
+@keyframes flashSweepText {
+    0% { background-position: -150% 0; opacity: 0; visibility: visible; }
+    20% { opacity: 0.8; }
+    100% { background-position: 150% 0; opacity: 0; visibility: hidden; }
+}
+
 .hero-subtitle {
     font-size: 1.25rem;
     color: var(--color-silver);
     max-width: 600px;
     margin: 0 auto var(--spacing-xl);
     animation: fadeInUp 1s ease-out 0.4s backwards;
+}
+
+.pricing-text {
+    margin: calc(var(--spacing-sm) * -1) auto var(--spacing-xl);
+    max-width: 680px;
+}
+
+.pricing-text h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    letter-spacing: 0.02em;
+    margin-bottom: var(--spacing-sm);
+}
+
+.pricing-text p {
+    color: var(--color-silver);
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 .hero-actions {
@@ -139,7 +186,6 @@
     font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    animation: fadeInUp 1s ease-out 0.8s backwards;
 }
 
 .scroll-indicator {
@@ -156,6 +202,10 @@
 
 /* Mobile Hero */
 @media (max-width: 768px) {
+    .hero-content {
+        padding-top: calc(var(--spacing-2xl) + 16px);
+    }
+
     .hero-stats {
         flex-direction: column;
         gap: var(--spacing-sm);
@@ -176,5 +226,19 @@
     .hero-badge {
         font-size: 0.75rem;
         padding: 6px 12px;
+    }
+
+    .hero-title {
+        font-size: clamp(2.4rem, 12vw, 3.4rem);
+        line-height: 1;
+    }
+
+    .hero-subtitle {
+        font-size: 1.05rem;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .pricing-text h3 {
+        font-size: clamp(1.3rem, 6vw, 1.8rem);
     }
 }

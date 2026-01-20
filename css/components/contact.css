@@ -18,10 +18,9 @@
     text-align: left;
 }
 
-.contact-info > p {
+.contact-info>p {
     color: var(--color-silver);
     font-size: 1.1rem;
-    margin-bottom: var(--spacing-xl);
 }
 
 .contact-details {
@@ -143,7 +142,7 @@ a.contact-item:hover {
         grid-template-columns: 1fr;
         gap: var(--spacing-xl);
     }
-    
+
     .contact-info .section-title {
         text-align: center;
     }

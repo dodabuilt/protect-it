@@ -1,0 +1,95 @@
+/* ===================================
+   REVIEWS SECTION
+   =================================== */
+
+.reviews-section {
+    background: var(--color-charcoal);
+}
+
+.services+.reviews-section {
+    padding-top: var(--spacing-lg);
+}
+
+.reviews-grid {
+    display: grid;
+    gap: var(--spacing-lg);
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    justify-items: center;
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.reviews-card {
+    background: var(--color-black);
+    border: 1px solid var(--color-steel);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    width: min(720px, 100%);
+    margin: 0 auto;
+}
+
+.reviews-card p {
+    color: var(--color-silver);
+}
+
+.reviews-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--color-light);
+    font-weight: 600;
+}
+
+.reviews-rating .stars {
+    color: #f6b940;
+    letter-spacing: 2px;
+    font-size: 1rem;
+}
+
+.reviews-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.reviews-badges {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.reviews-badge {
+    background: linear-gradient(135deg, rgba(17, 17, 17, 0.9), rgba(30, 30, 30, 0.9));
+    border: 1px solid var(--color-steel);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+}
+
+.reviews-badge h4 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--color-light);
+    margin-bottom: var(--spacing-xs);
+    letter-spacing: 0.5px;
+}
+
+.reviews-badge p {
+    color: var(--color-silver);
+    font-size: 0.95rem;
+}
+
+.reviews-link {
+    color: var(--color-rust-light);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.reviews-link:hover {
+    color: var(--color-rust);
+}

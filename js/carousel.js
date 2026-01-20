@@ -13,9 +13,17 @@ export function initCarousel() {
     if (!track) return;
     
     const slides = track.querySelectorAll('.carousel-slide');
+    const slideImages = Array.from(slides)
+        .map((slide) => slide.querySelector('img'))
+        .filter(Boolean);
+    const lightbox = document.getElementById('image-lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxPrev = document.querySelector('.lightbox-prev');
+    const lightboxNext = document.querySelector('.lightbox-next');
     let currentIndex = 0;
     let slidesPerView = getSlidesPerView();
     let autoplayInterval;
+    let lightboxIndex = 0;
     
     // Create dots
     const totalDots = Math.ceil(slides.length / slidesPerView);
@@ -94,6 +102,59 @@ export function initCarousel() {
         clearInterval(autoplayInterval);
         startAutoplay();
     }
+
+    // Lightbox preview
+    function openLightbox(image) {
+        if (!lightbox || !lightboxImage) return;
+        lightboxIndex = Math.max(0, slideImages.indexOf(image));
+        setLightboxImage(lightboxIndex);
+        lightbox.classList.add('active');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-open');
+        clearInterval(autoplayInterval);
+    }
+
+    function setLightboxImage(index) {
+        if (!lightboxImage || slideImages.length === 0) return;
+        const image = slideImages[index];
+        lightboxImage.src = image.src;
+        lightboxImage.alt = image.alt || 'Gallery image';
+    }
+
+    function showLightboxImage(direction) {
+        if (slideImages.length === 0) return;
+        lightboxIndex = (lightboxIndex + direction + slideImages.length) % slideImages.length;
+        setLightboxImage(lightboxIndex);
+    }
+
+    function closeLightbox() {
+        if (!lightbox || !lightboxImage) return;
+        lightbox.classList.remove('active');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lightbox-open');
+        startAutoplay();
+    }
+
+    if (lightbox) {
+        lightbox.addEventListener('click', (event) => {
+            const closeTrigger = event.target.closest('[data-lightbox-close]');
+            if (closeTrigger) {
+                closeLightbox();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
+            if (event.key === 'ArrowLeft' && lightbox.classList.contains('active')) {
+                showLightboxImage(-1);
+            }
+            if (event.key === 'ArrowRight' && lightbox.classList.contains('active')) {
+                showLightboxImage(1);
+            }
+        });
+    }
     
     // Handle resize
     window.addEventListener('resize', debounce(() => {
@@ -146,6 +207,49 @@ export function initCarousel() {
     
     // Start autoplay
     startAutoplay();
+
+    // Image click handlers
+    slideImages.forEach((image) => {
+        image.setAttribute('role', 'button');
+        image.setAttribute('tabindex', '0');
+        image.addEventListener('click', () => openLightbox(image));
+        image.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openLightbox(image);
+            }
+        });
+    });
+
+    if (lightboxPrev) {
+        lightboxPrev.addEventListener('click', () => showLightboxImage(-1));
+    }
+
+    if (lightboxNext) {
+        lightboxNext.addEventListener('click', () => showLightboxImage(1));
+    }
+
+    if (lightbox) {
+        let lightboxTouchStartX = 0;
+        let lightboxTouchEndX = 0;
+
+        lightbox.addEventListener('touchstart', (event) => {
+            lightboxTouchStartX = event.changedTouches[0].screenX;
+        }, { passive: true });
+
+        lightbox.addEventListener('touchend', (event) => {
+            lightboxTouchEndX = event.changedTouches[0].screenX;
+            const swipeThreshold = 50;
+            const diff = lightboxTouchStartX - lightboxTouchEndX;
+            if (Math.abs(diff) > swipeThreshold && lightbox.classList.contains('active')) {
+                if (diff > 0) {
+                    showLightboxImage(1);
+                } else {
+                    showLightboxImage(-1);
+                }
+            }
+        }, { passive: true });
+    }
     
     // Pause on hover
     track.addEventListener('mouseenter', () => clearInterval(autoplayInterval));

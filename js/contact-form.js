@@ -8,6 +8,29 @@ export function initContactForm() {
     const form = document.getElementById('contact-form');
     
     if (!form) return;
+
+    const phoneInput = form.querySelector('#phone');
+    if (phoneInput) {
+        const formatPhone = (value) => {
+            const digits = value.replace(/\D/g, '').slice(0, 10);
+            const parts = [];
+            if (digits.length > 0) {
+                parts.push(`(${digits.slice(0, 3)}`);
+            }
+            if (digits.length >= 4) {
+                parts[0] = `${parts[0]})`;
+                parts.push(` ${digits.slice(3, 6)}`);
+            }
+            if (digits.length >= 7) {
+                parts[1] = `${parts[1]}-${digits.slice(6, 10)}`;
+            }
+            return parts.join('');
+        };
+
+        phoneInput.addEventListener('input', () => {
+            phoneInput.value = formatPhone(phoneInput.value);
+        });
+    }
     
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -32,29 +55,33 @@ export function initContactForm() {
             vehicleInfo += ` (${submodel})`;
         }
         
-        // Create mailto link with form data
-        const subject = encodeURIComponent(`Quote Request from ${data.name}`);
-        const body = encodeURIComponent(
-            `Name: ${data.name}\n` +
-            `Email: ${data.email}\n` +
-            `Vehicle: ${vehicleInfo}\n` +
-            `Location: ${data.location}\n` +
-            `\nMessage:\n${data.message || 'No additional details provided.'}`
-        );
-        
-        // Open email client
-        window.location.href = `mailto:ProtectIt100@proton.me?subject=${subject}&body=${body}`;
-        
-        // Show success message
-        showFormMessage('Opening your email client...', 'success');
-        
-        // Reset form after a delay
-        setTimeout(() => {
-            form.reset();
-            // Reset vehicle selects
-            resetSelect(document.getElementById('vehicle-make'), 'Make');
-            resetSelect(document.getElementById('vehicle-model'), 'Model');
-            resetSelect(document.getElementById('vehicle-submodel'), 'Trim/Style (optional)');
-        }, 1000);
+        const payload = {
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            vehicle: vehicleInfo,
+            location: data.location,
+            message: data.message
+        };
+
+        fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Send failed');
+                }
+                showFormMessage('Thanks! Your request has been sent.', 'success');
+                form.reset();
+                // Reset vehicle selects
+                resetSelect(document.getElementById('vehicle-make'), 'Make');
+                resetSelect(document.getElementById('vehicle-model'), 'Model');
+                resetSelect(document.getElementById('vehicle-submodel'), 'Trim/Style (optional)');
+            })
+            .catch(() => {
+                showFormMessage('Something went wrong sending your request. Please try again.', 'error');
+            });
     });
 }
