@@ -43,23 +43,21 @@ export function initContactForm() {
         const yearSelect = document.getElementById('vehicle-year');
         const makeSelect = document.getElementById('vehicle-make');
         const modelSelect = document.getElementById('vehicle-model');
-        const submodelSelect = document.getElementById('vehicle-submodel');
+        const rustLevelSelect = document.getElementById('rust-level');
 
         const year = yearSelect.options[yearSelect.selectedIndex]?.text || '';
         const make = makeSelect.options[makeSelect.selectedIndex]?.text || '';
         const model = modelSelect.options[modelSelect.selectedIndex]?.text || '';
-        const submodel = submodelSelect.options[submodelSelect.selectedIndex]?.text || '';
+        const rustLevel = rustLevelSelect?.options[rustLevelSelect.selectedIndex]?.text || '';
 
-        let vehicleInfo = `${year} ${make} ${model}`.trim();
-        if (submodel && submodel !== 'Trim/Style (optional)') {
-            vehicleInfo += ` (${submodel})`;
-        }
+        const vehicleInfo = `${year} ${make} ${model}`.trim();
 
         const payload = {
             name: data.name,
             email: data.email,
             phone: data.phone,
             vehicle: vehicleInfo,
+            rustLevel: rustLevel || 'Not provided',
             location: data.location,
             message: data.message
         };
@@ -78,7 +76,9 @@ export function initContactForm() {
                 // Reset vehicle selects
                 resetSelect(document.getElementById('vehicle-make'), 'Make');
                 resetSelect(document.getElementById('vehicle-model'), 'Model');
-                resetSelect(document.getElementById('vehicle-submodel'), 'Trim/Style (optional)');
+                if (rustLevelSelect) {
+                    rustLevelSelect.value = '';
+                }
             })
             .catch(() => {
                 showFormMessage('Something went wrong sending your request. Please try again.', 'error');

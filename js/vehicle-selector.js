@@ -8,7 +8,7 @@ export function initVehicleSelector() {
     const yearSelect = document.getElementById('vehicle-year');
     const makeSelect = document.getElementById('vehicle-make');
     const modelSelect = document.getElementById('vehicle-model');
-    const submodelSelect = document.getElementById('vehicle-submodel');
+    const rustLevelSelect = document.getElementById('rust-level');
     const loadingIndicator = document.getElementById('vehicle-loading');
     
     if (!yearSelect) return;
@@ -29,7 +29,9 @@ export function initVehicleSelector() {
         // Reset dependent dropdowns
         resetSelect(makeSelect, 'Make');
         resetSelect(modelSelect, 'Model');
-        resetSelect(submodelSelect, 'Trim/Style (optional)');
+        if (rustLevelSelect) {
+            rustLevelSelect.value = '';
+        }
         
         if (!year) return;
         
@@ -53,7 +55,9 @@ export function initVehicleSelector() {
         
         // Reset dependent dropdowns
         resetSelect(modelSelect, 'Model');
-        resetSelect(submodelSelect, 'Trim/Style (optional)');
+        if (rustLevelSelect) {
+            rustLevelSelect.value = '';
+        }
         
         if (!makeId) return;
         
@@ -70,29 +74,10 @@ export function initVehicleSelector() {
     });
     
     // Model change handler
-    modelSelect.addEventListener('change', async () => {
-        const year = yearSelect.value;
-        const modelId = modelSelect.value;
-        const modelName = modelSelect.options[modelSelect.selectedIndex]?.text;
-        const makeName = makeSelect.options[makeSelect.selectedIndex]?.text;
-        
-        // Reset submodel dropdown
-        resetSelect(submodelSelect, 'Trim/Style (optional)');
-        
-        if (!modelId) return;
-        
-        showLoading(true);
-        try {
-            const submodels = await fetchSubmodels(year, makeName, modelName);
-            if (submodels && submodels.length > 0) {
-                populateSubmodelSelect(submodelSelect, submodels);
-                submodelSelect.disabled = false;
-            }
-        } catch (error) {
-            console.error('Error fetching submodels:', error);
-            // Submodel is optional, so we don't show an error
+    modelSelect.addEventListener('change', () => {
+        if (rustLevelSelect) {
+            rustLevelSelect.value = '';
         }
-        showLoading(false);
     });
     
     function showLoading(show) {
@@ -126,43 +111,6 @@ async function fetchModels(year, makeName) {
     return models.sort((a, b) => a.Model_Name.localeCompare(b.Model_Name));
 }
 
-// Fetch vehicle details (submodels/trims) for a specific vehicle
-async function fetchSubmodels(year, makeName, modelName) {
-    const response = await fetch(
-        `${NHTSA_API_BASE}/GetModelsForMakeYear/make/${encodeURIComponent(makeName)}/modelyear/${year}/vehicletype/car?format=json`
-    );
-    const data = await response.json();
-    
-    // Filter to get variations of the selected model
-    const results = data.Results || [];
-    const modelVariations = results.filter(r => 
-        r.Model_Name.toLowerCase().includes(modelName.toLowerCase()) ||
-        modelName.toLowerCase().includes(r.Model_Name.toLowerCase())
-    );
-    
-    // If we have variations, return unique ones
-    if (modelVariations.length > 1) {
-        const uniqueNames = [...new Set(modelVariations.map(m => m.Model_Name))];
-        return uniqueNames.map(name => ({ name }));
-    }
-    
-    // Try to get vehicle types/body styles
-    try {
-        const typesResponse = await fetch(
-            `${NHTSA_API_BASE}/GetVehicleTypesForMake/${encodeURIComponent(makeName)}?format=json`
-        );
-        const typesData = await typesResponse.json();
-        const types = typesData.Results || [];
-        
-        if (types.length > 0) {
-            return types.map(t => ({ name: t.VehicleTypeName }));
-        }
-    } catch (e) {
-        // Ignore errors for optional data
-    }
-    
-    return [];
-}
 
 // Reset a select element
 export function resetSelect(select, placeholder) {
@@ -185,19 +133,6 @@ function populateSelect(select, items, labelKey, valueKey) {
     });
 }
 
-// Populate submodel select with simpler data structure
-function populateSubmodelSelect(select, items) {
-    const placeholder = select.options[0];
-    select.innerHTML = '';
-    select.appendChild(placeholder);
-    
-    items.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.name;
-        option.textContent = item.name;
-        select.appendChild(option);
-    });
-}
 
 // Show form message (exported for use in contact form)
 export function showFormMessage(message, type) {

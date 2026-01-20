@@ -29,6 +29,7 @@ $name = trim($input['name'] ?? '');
 $email = trim($input['email'] ?? '');
 $phone = trim($input['phone'] ?? '');
 $vehicle = trim($input['vehicle'] ?? '');
+$rustLevel = trim($input['rustLevel'] ?? '');
 $location = trim($input['location'] ?? '');
 $message = trim($input['message'] ?? '');
 
@@ -42,6 +43,7 @@ $textBody = "Name: {$name}\n"
     . "Email: {$email}\n"
     . "Phone: " . ($phone !== '' ? $phone : 'Not provided') . "\n"
     . "Vehicle: " . ($vehicle !== '' ? $vehicle : 'Not provided') . "\n"
+    . "Rust Level: " . ($rustLevel !== '' ? $rustLevel : 'Not provided') . "\n"
     . "Location: {$location}\n\n"
     . "Message:\n" . ($message !== '' ? $message : 'No additional details provided.');
 
