@@ -28,11 +28,20 @@
     text-decoration: none;
     font-weight: 600;
     border-bottom: 1px solid rgba(196, 92, 38, 0.4);
+    -webkit-text-fill-color: var(--color-rust-light);
 }
 
 .contact-info>p a:hover {
     color: var(--color-rust);
     border-bottom-color: rgba(196, 92, 38, 0.8);
+    -webkit-text-fill-color: var(--color-rust);
+}
+
+@media (max-width: 768px) {
+    .contact-info>p a {
+        color: var(--color-rust-light) !important;
+        -webkit-text-fill-color: var(--color-rust-light) !important;
+    }
 }
 
 .contact-details {
